@@ -8,7 +8,7 @@
         <!--
         <version>0.0.5-SNAPSHOT</version>
 -->
-        <version>${BUILD_VERSION}</version>
+        <version>0.0.${BUILD_NUMBER}-SNAPSHOT</version>
         <name>maven-web-application</name>
 
         <description>Maven Web Project for Java Project</description>
