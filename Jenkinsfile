@@ -73,3 +73,45 @@ post{
 
 
 }//Pipeline closing
+
+// Below code written by Rajdeep to deploy war to Tomcat server
+/*
+pipeline {
+    agent any
+    tools {
+  maven 'mavenversion3.9.10'
+}
+stages {
+  stage('CheckoutCode') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      git branch: 'master', url: 'https://github.com/DevTestOrg88/maven-web-application.git'
+    }
+  }
+  stage('Build') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      sh 'mvn clean install'
+    }
+  }
+  //Used Snippet Generator with 'Deploy comtainer plugin ' under sample steps and converted to Declarative way scipt using chartGpt
+  stage('Deploy to Tomcat') {
+            steps {
+                step([$class: 'DeployPublisher',
+                    adapters: [
+                        [$class: 'Tomcat9xAdapter',
+                         credentialsId: '4aff5716-dda4-4c4f-8dff-d14020358397',
+                         url: 'http://13.126.90.62:9090/manager/text',
+                         path: '',
+                         alternativeDeploymentContext: ''
+                        ]
+                    ],
+                    contextPath: '/maven-web-application',
+                    war: '**/maven-web-application.war'
+                ])
+            }
+        }
+
+}
+}
+*/
