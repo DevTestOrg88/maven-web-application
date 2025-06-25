@@ -81,6 +81,11 @@ pipeline {
     tools {
   maven 'mavenversion3.9.10'
 }
+//github web hook
+triggers {
+  githubPush()
+}
+
 stages {
   stage('CheckoutCode') {
     steps {
