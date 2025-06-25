@@ -76,21 +76,23 @@ post{
 
 // Below code written by Rajdeep to deploy war to Tomcat server
 /*
+
 pipeline {
     agent any
     tools {
   maven 'mavenversion3.9.10'
 }
-//github web hook
 triggers {
   githubPush()
 }
-
+parameters {
+  choice choices: ['master', 'dev', 'stage'], description: 'build with parameter', name: 'branchName'
+}
 stages {
   stage('CheckoutCode') {
     steps {
       // One or more steps need to be included within the steps block.
-      git branch: 'master', url: 'https://github.com/DevTestOrg88/maven-web-application.git'
+      git branch: "${params.branchName}", url: 'https://github.com/DevTestOrg88/maven-web-application.git'
     }
   }
   stage('Build') {
@@ -99,14 +101,14 @@ stages {
       sh 'mvn clean install'
     }
   }
-  //Used Snippet Generator with 'Deploy comtainer plugin ' under sample steps and converted to Declarative way scipt using chartGpt
+//Used Snippet Generator with 'Deploy comtainer plugin ' under sample steps and converted to Declarative way scipt using chartGpt
   stage('Deploy to Tomcat') {
             steps {
                 step([$class: 'DeployPublisher',
                     adapters: [
                         [$class: 'Tomcat9xAdapter',
                          credentialsId: '4aff5716-dda4-4c4f-8dff-d14020358397',
-                         url: 'http://13.126.90.62:9090/manager/text',
+                         url: 'http://13.126.90.62-61:9090/manager/text',
                          path: '',
                          alternativeDeploymentContext: ''
                         ]
@@ -116,7 +118,17 @@ stages {
                 ])
             }
         }
-
 }
+// To ensure notifications (like email) run regardless of earlier failures
+    post {
+            always {
+                emailext (
+                    attachLog: true,
+                    body: 'Check console output at $BUILD_URL to view the results.',
+                    subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!',
+                    to: 'rajdeeprm88@gmail.com'
+                )
+            }
+        }
 }
 */
