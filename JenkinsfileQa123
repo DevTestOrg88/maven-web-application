@@ -23,7 +23,7 @@ stages {
                     adapters: [
                         [$class: 'Tomcat9xAdapter',
                          credentialsId: '4aff5716-dda4-4c4f-8dff-d14020358397',
-                         url: 'http://13.126.90.62-61:9090/manager/text',
+                         url: 'http://3.110.54.224:9090/manager/text',
                          path: '',
                          alternativeDeploymentContext: ''
                         ]
