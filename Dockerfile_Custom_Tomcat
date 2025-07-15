@@ -1,0 +1,29 @@
+ARG branch=latest
+FROM alpine:${branch}
+# For Ubuntu
+#FROM ubuntu
+ARG branch=latest
+LABEL branchName=${branch} \
+      Author=Rajdeep \
+      Description="Custom tomcat Image"
+WORKDIR /opt
+# For Ubuntu
+#RUN apt update && apt install -y default-jdk unzip wget
+RUN apk update && apk add openjdk21 unzip wget
+# For Ubuntu
+#RUN useradd -m tomcat
+RUN adduser -D tomcat
+RUN wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.107/bin/apache-tomcat-9.0.107.zip && \
+    unzip apache-tomcat-9.0.107.zip && \
+    rm apache-tomcat-9.0.107.zip
+ENV username=admin
+ENV password=abc123
+RUN echo "<user username=\"$username\" password=\"$password\" roles=\"admin-gui,manager-gui\"/>" >> apache-tomcat-9.0.107/conf/tomcat-users.xml
+COPY context.xml apache-tomcat-9.0.107/webapps/manager/META-INF/
+RUN chown -R tomcat:tomcat apache-tomcat-9.0.107 && chmod u+x apache-tomcat-9.0.107/bin/*.sh
+EXPOSE 8080
+USER tomcat
+# The run command starts Tomcat in the foreground, which keeps the container alive.
+# The start command starts Tomcat in the background, so the container exits immediately.
+CMD ["run"]
+ENTRYPOINT ["apache-tomcat-9.0.107/bin/catalina.sh"]
