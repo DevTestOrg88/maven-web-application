@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+    tools {
+  maven 'mavenversion3.9.11'
+}
+stages {
+  stage('CheckoutCode') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      git branch: "master", url: 'https://github.com/DevTestOrg88/maven-web-application.git'
+    }
+  }
+  stage('Build') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      sh 'mvn clean install'
+    }
+  }
+  stage('Create docker image') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      sh 'docker build -t webapp:$BUILD_NUMBER .'
+    }
+  }
+  stage('Deploy docker container') {
+    steps {
+      // One or more steps need to be included within the steps block.
+      sh 'docker run -d --name webappdeployed -p 8090:8080 webapp:$BUILD_NUMBER'
+    }
+  }
+}
+}
