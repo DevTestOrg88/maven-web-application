@@ -1,7 +1,5 @@
 FROM maven:3.8.7-eclipse-temurin-19-alpine AS build
 WORKDIR /app
-RUN apt-get update && apt-get install -y git \
-    && git clone https://github.com/DevTestOrg88/maven-web-application.git .
 ENV BUILD_NUMBER=3
 COPY . .
 RUN mvn clean package -DskipTests
