@@ -19,13 +19,25 @@ stages {
   stage('Create docker image') {
     steps {
       // One or more steps need to be included within the steps block.
-      sh 'docker build -t webapp:$BUILD_NUMBER .'
+      sh 'docker build -t rajdeeprm/sampleprojects:$BUILD_NUMBER .'
     }
+  }
+  stage('Push to Docker Hub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhubcredentials', passwordVariable: 'password', usernameVariable: 'username')]) {
+                        sh '''
+                            echo "$password" | docker login -u "$username" --password-stdin
+                            docker push rajdeeprm/sampleprojects:$BUILD_NUMBER 
+                        '''
+                    }
+                }
+            }
   }
   stage('Deploy docker container') {
     steps {
       // One or more steps need to be included within the steps block.
-      sh 'docker run -d --name webappdeployed -p 8090:8080 webapp:$BUILD_NUMBER'
+      sh 'docker run -d --name webappdeployed -p 8090:8080 rajdeeprm/sampleprojects:$BUILD_NUMBER'
     }
   }
 }
